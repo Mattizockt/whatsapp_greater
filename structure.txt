@@ -1,0 +1,19 @@
+*How is my program going to work*?
+
+1. get date <
+2. with date search for database <
+
+    date, usernames, type
+    DD/MM/JJ, ("string", "string", "string"), type
+
+    type, text
+    type, ("string", "string")
+
+
+a.)program not fit for mulitple strings
+3. name needs placeholder in text
+4. return the string
+5. open up whatsapp
+6. find contact by name, put in text.
+
+

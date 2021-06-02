@@ -13,7 +13,8 @@ def main():
     else:
         date, name, type, text = information
 
-    print(date, name, type, text)
+
+
 
 
 def get_info_to_type():
@@ -22,10 +23,11 @@ def get_info_to_type():
     c = conn.cursor()
 
     date = datetime.today().strftime("%d/%m")
-    date = "24/12"
+    date = "16/01"
 
     # get name of person and event name
     database_results_general = c.execute("select * from general where dates = ?", (date,)).fetchall()
+    conn.commit()
 
     if not database_results_general:
         return None
@@ -33,6 +35,7 @@ def get_info_to_type():
 
     # get message
     database_results_festivity = c.execute("select * from festivity where type = ?", (event,)).fetchall()
+    conn.commit()
 
     if not database_results_festivity:
         raise ValueError("There is no message text for this query")
