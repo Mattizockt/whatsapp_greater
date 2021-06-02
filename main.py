@@ -14,9 +14,6 @@ def main():
         date, name, type, text = information
 
 
-
-
-
 def get_info_to_type():
 
     conn = sqlite3.connect("whatsapp.db")
@@ -31,17 +28,22 @@ def get_info_to_type():
 
     if not database_results_general:
         return None
-    [(_, name, event)] = database_results_general
 
     # get message
-    database_results_festivity = c.execute("select * from festivity where type = ?", (event,)).fetchall()
-    conn.commit()
+    festivity_text = []
+    for general_result in database_results_general:
+        festivity_text.append(c.execute("""select content from festivity where type = ? order by random() limit 1""", (general_result[2],)).fetchall())
+        conn.commit()
 
-    if not database_results_festivity:
+    if not festivity_text:
         raise ValueError("There is no message text for this query")
-    [(_, message)] = database_results_festivity
-    return date, name, event, message
 
+    # merge message and person together
+    result = []
+    for gen, fes in zip(database_results_general, festivity_text):
+        result.append((gen[0], gen[1], gen[2], fes))
+
+    return result
 if __name__ == "__main__":
     main()
 
