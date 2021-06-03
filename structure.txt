@@ -9,12 +9,13 @@
     type, text
     type, ("string", "string")
 
-
+#+
 a.)program not fit for mulitple strings <
 3. name needs placeholder in text <
 4. return the string <
 configure how to insert
 5. open up whatsapp
+optional: only wait 10 secs if logo not seen
 6. find contact by name, put in text.
 
 features:

@@ -1,6 +1,7 @@
 import sqlite3
 from datetime import datetime
-
+from time import sleep
+import pyautogui
 
 def main():
 
@@ -10,8 +11,24 @@ def main():
     # can anything be typed?
     if information is None:
         return print("Nothing to type today.")
-    else:
-        date, name, type, text = information
+
+    # open whatsapp and initialize
+
+    for element in information:
+
+        date, name, event, text = element
+        # prepare search field
+
+        pyautogui.click(x=searchbar[0], y=searchbar[1])
+        pyautogui.hotkey("ctrl", "a")
+        pyautogui.press("backspace")
+
+
+
+
+    # write the text
+    # for task in information:
+
 
 
 def get_info_to_type():
@@ -41,9 +58,28 @@ def get_info_to_type():
     # merge message and person together
     result = []
     for gen, fes in zip(database_results_general, festivity_text):
-        result.append((gen[0], gen[1], gen[2], fes))
+        result.append((gen[0], gen[1], gen[2], fes[0][0]))
 
     return result
+
+def open_whatsapp():
+    
+    pyautogui.press("win")
+    sleep(0.5)
+    pyautogui.write("whatsapp")
+    pyautogui.press("enter")
+
+    # wait till whatsapp is loaded
+    while True:
+        if pyautogui.locateOnScreen("pictures\whatsapp_start_pic.jpg", confidence=0.9):
+            print("success")
+            break
+        else:
+            print("failure")
+
+    # enter in searchbar the name
+    searchbar = pyautogui.center(pyautogui.locateOnScreen("pictures\searchbar_whatsapp.jpg", confidence=0.9))
+    return searchbar
 if __name__ == "__main__":
     main()
 
