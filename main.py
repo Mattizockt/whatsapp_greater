@@ -3,6 +3,7 @@ from datetime import datetime
 from time import sleep
 import pyautogui
 
+
 def main():
 
     # get necessities to start bot
@@ -13,23 +14,37 @@ def main():
         return print("Nothing to type today.")
 
     # open whatsapp and initialize
+    searchbar = open_whatsapp()
+
 
     for element in information:
 
         date, name, event, text = element
-        # prepare search field
 
+        # prepare search field
         pyautogui.click(x=searchbar[0], y=searchbar[1])
         pyautogui.hotkey("ctrl", "a")
         pyautogui.press("backspace")
+        pyautogui.write(name)
+        sleep(2)
+        pyautogui.click(x=146, y=241)
+        sleep(2)
 
+        # todo weiter fehleroptimierung (schnelligkeit, übergang zwischen mehreren zielen)
 
+        # if this person does exist
+        message_bar = pyautogui.locateOnScreen("pictures\message_bar.jpg", confidence=0.9)
+        if message_bar is None:
+            raise ValueError("The name of the person does not exist")
 
+        # start writing the text
+        pyautogui.click(x=message_bar[0], y=message_bar[1])
+        pyautogui.write(text.format(name))
+        pyautogui.press("enter")
 
-    # write the text
-    # for task in information:
-
-
+        pyautogui.FAILSAFE = False
+        pyautogui.click(x=1919, y=0)
+        pyautogui.FAILSAFE = True
 
 def get_info_to_type():
 
@@ -61,6 +76,7 @@ def get_info_to_type():
         result.append((gen[0], gen[1], gen[2], fes[0][0]))
 
     return result
+
 
 def open_whatsapp():
     

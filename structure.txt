@@ -1,21 +1,10 @@
 *How is my program going to work*?
 
-1. get date <
-2. with date search for database <
-
-    date, usernames, type
-    DD/MM/JJ, ("string", "string", "string"), type
-
-    type, text
-    type, ("string", "string")
-
-#+
-a.)program not fit for mulitple strings <
-3. name needs placeholder in text <
-4. return the string <
-configure how to insert
-5. open up whatsapp
-optional: only wait 10 secs if logo not seen
+configure all
+configure automatic start
+configure gui
+if whatsapp is not closed, it doesn't work
+further optimiziations necessary (sleep statements)
 6. find contact by name, put in text.
 
 features:
