@@ -3,7 +3,7 @@
 configure all
 configure automatic start
 configure gui
-if whatsapp is not closed, it doesn't work
+configure that it doesnt matter if whatsapp is opened
 further optimiziations necessary (sleep statements)
 6. find contact by name, put in text.
 

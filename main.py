@@ -5,7 +5,6 @@ import pyautogui
 
 
 def main():
-
     # get necessities to start bot
     information = get_info_to_type()
 
@@ -16,38 +15,11 @@ def main():
     # open whatsapp and initialize
     searchbar = open_whatsapp()
 
+    # writes text into whatsap
+    write_in_whatsapp(information, searchbar)
 
-    for element in information:
-
-        date, name, event, text = element
-
-        # prepare search field
-        pyautogui.click(x=searchbar[0], y=searchbar[1])
-        pyautogui.hotkey("ctrl", "a")
-        pyautogui.press("backspace")
-        pyautogui.write(name)
-        sleep(2)
-        pyautogui.click(x=146, y=241)
-        sleep(2)
-
-        # todo weiter fehleroptimierung (schnelligkeit, übergang zwischen mehreren zielen)
-
-        # if this person does exist
-        message_bar = pyautogui.locateOnScreen("pictures\message_bar.jpg", confidence=0.9)
-        if message_bar is None:
-            raise ValueError("The name of the person does not exist")
-
-        # start writing the text
-        pyautogui.click(x=message_bar[0], y=message_bar[1])
-        pyautogui.write(text.format(name))
-        pyautogui.press("enter")
-
-        pyautogui.FAILSAFE = False
-        pyautogui.click(x=1919, y=0)
-        pyautogui.FAILSAFE = True
 
 def get_info_to_type():
-
     conn = sqlite3.connect("whatsapp.db")
     c = conn.cursor()
 
@@ -64,7 +36,8 @@ def get_info_to_type():
     # get message
     festivity_text = []
     for general_result in database_results_general:
-        festivity_text.append(c.execute("""select content from festivity where type = ? order by random() limit 1""", (general_result[2],)).fetchall())
+        festivity_text.append(c.execute("""select content from festivity where type = ? order by random() limit 1""",
+                                        (general_result[2],)).fetchall())
         conn.commit()
 
     if not festivity_text:
@@ -77,9 +50,7 @@ def get_info_to_type():
 
     return result
 
-
 def open_whatsapp():
-    
     pyautogui.press("win")
     sleep(0.5)
     pyautogui.write("whatsapp")
@@ -96,6 +67,45 @@ def open_whatsapp():
     # enter in searchbar the name
     searchbar = pyautogui.center(pyautogui.locateOnScreen("pictures\searchbar_whatsapp.jpg", confidence=0.9))
     return searchbar
+
+def write_in_whatsapp(information, searchbar):
+
+    for element in information:
+
+        date, name, event, text = element
+
+        # prepare search field
+        pyautogui.click(x=searchbar[0], y=searchbar[1])
+        pyautogui.hotkey("ctrl", "a")
+        pyautogui.press("backspace")
+        pyautogui.write(name)
+
+        # if there is fitting chat, groupchat
+        while True:
+            if pyautogui.locateOnScreen("pictures\chats_logo.jpg", confidence=0.8) or pyautogui.locateOnScreen(
+                    "pictures\groups_logo.jpg", confidence=0.8):
+                break
+            elif pyautogui.locateOnScreen("pictures\\no_group_chats_found.jpg", confidence=0.8):
+                print("this chat does not exist")
+                return 0
+        pyautogui.click(x=146, y=241)
+
+        # wait until entering the message bar is possible
+        message_bar = None
+        while True:
+            message_bar = pyautogui.locateOnScreen("pictures\message_bar.jpg", confidence=0.9)
+            if message_bar:
+                break
+
+        # start writing the text
+        pyautogui.click(x=message_bar[0], y=message_bar[1])
+        pyautogui.write(text.format(name))
+        pyautogui.press("enter")
+        pyautogui.press("enter")
+
+    pyautogui.FAILSAFE = False
+    pyautogui.click(x=1919, y=0)
+    pyautogui.FAILSAFE = True
+
 if __name__ == "__main__":
     main()
-
