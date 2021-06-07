@@ -1,0 +1,54 @@
+to change something in the database, you can use one
+of the operations below.
+if using pycharm, recommend the extension db navigator
+
+select * from festivity;
+select * from general;
+
+delete from festivity;
+delete from general;
+
+DROP TABle general;
+Drop table festivity;
+
+insert into festivity (type, content)
+values
+    ("birthday", "Happy birthday {0}!"),
+    ("birthday", "Herzlichen Glueckwunsch zum Geburstag {0}!"),
+    ("birthday", "Einen froehlichen Geburtstag wünsche ich dir {0}!"),
+    ("christmas", "Froehliche Weihnachten {0}!"),
+    ("christmas", "Merry Christmas {0}"),
+    ("neujahr", "Ein schoenes neues Jahr wünsche ich dir {0}!"),
+    ("neujahr", "Einen guten Rutsch wünsche ich dir {0}"),
+    ("birthday_special", "und natürlich auch einen froehlichen Geburstag {0}")
+    ;
+
+insert into general (dates, persons, type)
+values
+    ("24/12", "all" , "christmas"),
+    ("01/01", "all" , "neujahr"),
+    ("99/99", "Monan", "birthday"),
+    ("99/99", "Dagmar", "birthday"),
+    ("99/99", "Jannik", "birthday"),
+    ("01/01", "Sturm", "birthday_special"),
+    ("14/12", "Dorte", "birthday"),
+    ("99/99", "Opa und Oma", "birthday")
+    ("08/04", "Konstantin", "birthday"),
+    ("07/01", "Gini", "birthday"),
+    ("16/01", "Jochen", "birthday")
+    ;
+
+CREATE TABLE IF NOT EXISTS
+general (
+    dates TEXT NOT NULL,
+    persons TEXT,
+    type TEXT
+)
+;
+
+CREATE TABLE IF NOT EXISTS
+    festivity (
+    type TEXT NOT NULL,
+    content TEXT
+    )
+;

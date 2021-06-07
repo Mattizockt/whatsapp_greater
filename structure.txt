@@ -1,5 +1,0 @@
-*How is my program going to work*?
-configure all
-configure automatic start
-configure that it doesnt matter if whatsapp is opened
-improve optic aspect
