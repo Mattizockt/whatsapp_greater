@@ -6,7 +6,7 @@ import pyautogui
 
 def main():
     # get necessities to start bot
-    information = get_info_to_type()
+    information = get_database_information()
 
     # can anything be typed?
     if information is None:
@@ -19,12 +19,11 @@ def main():
     write_in_whatsapp(information, searchbar)
 
 
-def get_info_to_type():
+def get_database_information():
     conn = sqlite3.connect("whatsapp.db")
     c = conn.cursor()
 
     date = datetime.today().strftime("%d/%m")
-    date = "16/01"
 
     # get name of person and event name
     database_results_general = c.execute("select * from general where dates = ?", (date,)).fetchall()
@@ -33,7 +32,17 @@ def get_info_to_type():
     if not database_results_general:
         return None
 
-    # get message
+    # what to do if one event is meant for everybody (with "all" as name)
+    all_statements = []
+    for result in database_results_general:
+        all_statements.append(make_holiday_for_all(result, c))  # [(),(),()]
+    database_results_general = [x for x in database_results_general if x[1] != "all"]
+
+    # modify all statements and append contents to database general_results
+    all_statements = [x for x in all_statements if x is not None]
+    [database_results_general.extend(x) for x in all_statements]
+
+    # get message that needs to be typed
     festivity_text = []
     for general_result in database_results_general:
         festivity_text.append(c.execute("""select content from festivity where type = ? order by random() limit 1""",
@@ -50,6 +59,21 @@ def get_info_to_type():
 
     return result
 
+
+# returns array of new statements
+def make_holiday_for_all(result, c):
+    all_names = []
+    if result[1] == "all":
+        all_names.append(c.execute("select persons from general where persons != 'all'").fetchall())
+
+        final_product = []
+        for name in all_names[0]:
+            final_product.append((result[0], name[0], result[2]))
+
+        return final_product  # [(), (), ()]
+
+
+# opens whatsapp
 def open_whatsapp():
     pyautogui.press("win")
     sleep(0.5)
@@ -68,8 +92,9 @@ def open_whatsapp():
     searchbar = pyautogui.center(pyautogui.locateOnScreen("pictures\searchbar_whatsapp.jpg", confidence=0.9))
     return searchbar
 
-def write_in_whatsapp(information, searchbar):
 
+# writes the text messages into whatsapp
+def write_in_whatsapp(information, searchbar):
     for element in information:
 
         date, name, event, text = element
@@ -106,6 +131,7 @@ def write_in_whatsapp(information, searchbar):
     pyautogui.FAILSAFE = False
     pyautogui.click(x=1919, y=0)
     pyautogui.FAILSAFE = True
+
 
 if __name__ == "__main__":
     main()
